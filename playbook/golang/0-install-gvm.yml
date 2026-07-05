@@ -29,6 +29,7 @@
     - name: check gvm correctly installed
       ansible.builtin.command: gvm version
       register: gvm_check
+      args:
+        executable: /bin/bash
+
     - debug: var=gvm_check.stdout
-
-

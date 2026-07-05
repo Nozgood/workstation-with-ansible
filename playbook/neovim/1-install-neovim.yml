@@ -1,0 +1,24 @@
+- name: neovim installation
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: get neovim tar 
+      ansible.builtin.uri:
+        url: https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+        dest: /tmp
+      args:
+        creates: "/tmp/nvim-linux-x86_64.tar.gz"
+
+
+    - name: extract neovim archive
+      ansible.builtin.unarchive:
+        src: /tmp/nvim-linux-x86_64.tar.gz  
+        dest: /opt
+      become: true
+
+    - name: add neovim to path in bashrc
+      ansible.builtin.lineinfile:
+        path: "{{ ansible_env.HOME }}/.bashrc"
+        line: 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"'
+        create: false
+        mode: '0755'
