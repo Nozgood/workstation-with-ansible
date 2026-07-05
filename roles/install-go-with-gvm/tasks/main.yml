@@ -1,0 +1,32 @@
+- name: check GVM is correctly installed
+  ansible.builtin.include_tasks:
+    file: verify-gvm.yml
+
+- name: verify asked version is installed 
+  ansible.builtin.stat: 
+    path: "{{ ansible_env.HOME }}/.gvm/gos/{{ go_version_to_install }}"
+  register: go_version_check
+  changed_when: false
+
+- name: load necessary golang version for go > 1.4
+  ansible.builtin.set_fact:
+    go_install_env:
+      PATH: "{{ ansible_env.HOME }}/.gvm/gos/{{ go_minimal_version }}/bin:{{ ansible_env.PATH }}"
+      GOROOT: "{{ ansible_env.HOME }}/.gvm/gos/{{ go_minimal_version }}"
+      GOROOT_BOOTSTRAP: "{{ ansible_env.HOME }}/.gvm/gos/{{ go_minimal_version }}"
+  when: (not go_version_check.stat.exists) and (not go_version_to_install == "go1.4") # not go1.4 because go1.4 do not need dependencies
+
+- name: set empty environement for go == 1.4
+  ansible.builtin.set_fact:
+    go_install_env: {}
+  when: go_version_to_install == "go1.4"
+
+- name: install {{ go_version_to_install }} 
+  ansible.builtin.command: gvm install "{{ go_version_to_install }}" -B
+  environment: "{{ go_install_env }}"
+  when: (not go_version_check.stat.exists) and (go_version_to_install == "go1.4")
+
+- name: install {{ go_version_to_install }} 
+  ansible.builtin.command: gvm install "{{ go_version_to_install }}"
+  environment: "{{ go_install_env }}"
+  when: (not go_version_check.stat.exists) and (not go_version_to_install == "go1.4")

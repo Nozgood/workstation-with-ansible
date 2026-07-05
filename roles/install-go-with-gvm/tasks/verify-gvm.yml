@@ -1,0 +1,11 @@
+- name: get informations about GVM bin 
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.gvm/bin/gvm"
+  register: gvm_check
+
+- name: verify is the GVM bin exists
+  ansible.builtin.fail:
+    msg: "gvm is not installed"
+  when: not gvm_check.stat.exists
+
+

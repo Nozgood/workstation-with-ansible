@@ -1,0 +1,12 @@
+#SPDX-License-Identifier: MIT-0
+galaxy_info:
+  author: Nowfeel SAFI
+  description: Role to install golang version using gvm (golang version manager)
+
+  license: BSD-3-Clause
+
+  min_ansible_version: 2.2
+
+  galaxy_tags: []
+
+dependencies: []

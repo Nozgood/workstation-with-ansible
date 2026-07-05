@@ -1,0 +1,34 @@
+- name: Install Golang Version Manager (GVM)
+  hosts: localhost
+  connection: local
+  tasks:
+
+    - name: install dependencies (bison)
+      become: true # need sudo access to install packages
+      ansible.builtin.apt:
+        name: bison
+        state: present
+
+    - name: get gvm installation script
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer
+        dest: /tmp/gvm-installer.sh
+        mode: '0755'
+
+    - name: execute gvm installation script
+      ansible.builtin.command: /tmp/gvm-installer.sh
+      args:
+        creates: "{{ ansible_env.HOME }}/.gvm/bin/gvm" # TODO: to change ansible_env -> deprecation warning and will be removed on ansible 2.24
+    
+    - name: source bashrc after gvm installation
+      ansible.builtin.shell: source ~/.bashrc # with /bin/sh -> `. ~/.bashrc` == source ~/.bashrc
+      changed_when: false # will always be marked as "changed" so will make noise for nothing
+      args:
+        executable: /bin/bash
+
+    - name: check gvm correctly installed
+      ansible.builtin.command: gvm version
+      register: gvm_check
+    - debug: var=gvm_check.stdout
+
+

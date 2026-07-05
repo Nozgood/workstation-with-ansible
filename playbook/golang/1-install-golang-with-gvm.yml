@@ -1,0 +1,55 @@
+- name: Install Golang versions with GVM
+  hosts: localhost
+  connection: local
+  tasks:
+
+    # GO 1.4
+    - name: gvm installation go1.4
+      ansible.builtin.include_role:
+        name: install-go-with-gvm
+      vars:
+        go_version_to_install: go1.4
+        # go_minimal_version: go1.4
+
+    # GO 1.17.3
+    - name: gvm installation go1.17.3
+      ansible.builtin.include_role:
+        name: install-go-with-gvm
+      vars:
+        go_version_to_install: go1.17.3
+        go_minimal_version: go1.4
+
+    # GO 1.20
+    - name: gvm installation go1.20 
+      ansible.builtin.include_role:
+        name: install-go-with-gvm
+      vars:
+        go_version_to_install: go1.20
+        go_minimal_version: go1.17.3
+
+    # GO 1.22.6
+    - name: gvm installation go1.22.6
+      ansible.builtin.include_role:
+        name: install-go-with-gvm
+      vars:
+        go_version_to_install: go1.22.6
+        go_minimal_version: go1.20
+
+    # GO 1.25
+    - name: gvm installation go1.25 
+      ansible.builtin.include_role:
+        name: install-go-with-gvm
+      vars:
+        go_version_to_install: go1.25
+        go_minimal_version: go1.22.6
+
+    # GO 1.25.11
+    - name: gvm installation go1.25.11
+      ansible.builtin.include_role:
+        name: install-go-with-gvm
+      vars:
+        go_version_to_install: go1.25.11
+        go_minimal_version: go1.25
+
+
+
